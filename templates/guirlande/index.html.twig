@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GuirlandeController!{% endblock %}
+
+{% block body %}
+
+    <h1>{{ guirlande.name }}</h1>
+    <pre>{{ guirlande.grid }}</pre>
+
+    <h2>Lettres Disponibles</h2>
+    <p>{{ guirlande.availableLetters }}</p>
+
+    <h2>Mots Trouvés</h2>
+    <ul>
+        {% for word in guirlande.foundWords %}
+            <li>{{ word }}</li>
+        {% endfor %}
+    </ul>
+
+    <form action="{{ path('guirlande_submit', {'id': guirlande.id}) }}" method="post">
+        <input type="text" name="word" placeholder="Entrez un mot" />
+        <button type="submit">Soumettre</button>
+    </form>
+
+{% endblock %}
