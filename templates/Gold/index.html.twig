@@ -1,0 +1,29 @@
+{# templates/Gold/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+
+
+{% block body %}
+    <div class="container">
+        <h1>Devinez le chiffre</h1>
+
+        {% if isOver %}
+            <p>Le jeu est terminé. Cliquez <a href="{{ path('app_Gold') }}">ici</a> pour rejouer.</p>
+        {% else %}
+            <p>Nombre de tentatives restantes : {{ 10 - attempts }}</p>
+            {{ form_start(form) }}
+                {{ form_row(form.guess) }}
+                <button class="btn">Deviner</button>
+            {{ form_end(form) }}
+        {% endif %}
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}
