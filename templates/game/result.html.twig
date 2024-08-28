@@ -1,0 +1,44 @@
+{# templates/game/result.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Résultat de la tentative</title>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Résultat de la tentative</h1>
+
+        {% if result.success %}
+            <p class="success">{{ result.message }}</p>
+            <a href="{{ path('start_game') }}"><button>Rejouer</button></a>
+        {% else %}
+            <p class="error">{{ result.message }}</p>
+
+            {% if result.remainingAttempts > 0 %}
+                <div class="form-container">
+                    <form action="{{ path('play_game') }}" method="post">
+                        <label for="answer">Votre réponse :</label>
+                        <input type="text" id="answer" name="answer" required>
+                        <button type="submit">Valider</button>
+                    </form>
+                    <p>Il vous reste {{ result.remainingAttempts }} tentatives.</p>
+                </div>
+            {% else %}
+                <a href="{{ path('start_game') }}"><button>Rejouer</button></a>
+            {% endif %}
+            
+            <div class="hints-container">
+                <h2>Indices :</h2>
+                <ul>
+                    {% for hint in result.hints %}
+                        <li>{{ hint }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
