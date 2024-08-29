@@ -1,0 +1,30 @@
+{# templates/rps/index.html.twig #}
+
+<h1>Pierre-Papier-Ciseaux</h1>
+
+{% if userChoice %}
+    <p>Vous avez choisi : <strong>{{ userChoice }}</strong></p>
+    <p>L'ordinateur a choisi : <strong>{{ computerChoice }}</strong></p>
+    <p><strong>{{ result }}</strong></p>
+
+    {% if result == 'Vous avez gagné !' %}
+        <h2>Bravo tu a gangné ! Le mot que tu cherche est dans cette liste 😁 :</h2>
+        <ul>
+            {% for guirlande in guirlandes %}
+                <li>{{ guirlande.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{{ path('app_rps') }}">Rejouer</a>
+{% else %}
+    <form method="get" action="{{ path('app_rps') }}">
+        <label for="choice">Faites votre choix :</label>
+        <select name="choice" id="choice">
+            {% for choice in choices %}
+                <option value="{{ choice }}">{{ choice }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Jouer</button>
+    </form>
+{% endif %}
