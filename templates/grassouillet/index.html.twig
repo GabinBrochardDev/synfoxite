@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>{{ title }}</h1>
+
+  {% if attemptsImagimot == arrayImagimot|length %}
+    <h3>{{ message }}</h3>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for element in arrayImagimot %}
+          <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="card mb-3">
+              <img src="{{ asset('imagimot/' ~ element.image) }}" class="img-fluid" alt="{{ element.image }}"/>
+              <div class="card-body">
+                <h5 class="card-title">{{ element.name }}</h5>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <a href="{{ path('app_imagimot_game') }}" class="btn btn-primary">Jeu</a>
+  {% endif %}
+
+</div>
+{% endblock %}
