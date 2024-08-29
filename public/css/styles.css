@@ -1,0 +1,64 @@
+/* Global */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Flexbox configuration for full-page layout */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header, main, and footer layout */
+header, footer {
+    background-color: #343a40;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Container for the main content */
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Footer adjustment */
+footer {
+    width: 100%;
+    position: relative;
+    bottom: 0;
+}
+
+/* Optional: Ensure footer sticks to bottom if content is short */
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+body > main {
+    flex: 1;
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}

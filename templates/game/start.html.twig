@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devinez le mot mystère{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header text-center">
+                    <h2>Devinez le mot mystère</h2>
+                </div>
+                <div class="card-body">
+                    <h3 class="text-center">Indices :</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for hint in gameData.hints %}
+                            <li class="list-group-item">{{ hint }}</li>
+                        {% endfor %}
+                    </ul>
+                    <form action="{{ path('play_game') }}" method="POST" class="mt-4">
+                        <div class="form-group">
+                            <label for="answer">Votre réponse :</label>
+                            <input type="text" name="answer" id="answer" class="form-control" placeholder="Entrez votre réponse ici" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block mt-3">Valider</button>
+                    </form>
+                    <p class="text-center mt-3">Vous avez {{ gameData.remainingAttempts }} tentatives pour trouver le mot.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
