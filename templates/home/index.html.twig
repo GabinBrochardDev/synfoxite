@@ -1,9 +1,105 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{
-parent() ~ ' - ' ~ title
-}} {% endblock %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ title }}
+{% endblock %}
 
 {% block body %}
-    {{ title }} 
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">{{ title }}</h1>
+    <!-- Formulaire avec quatre champs de saisie et boutons -->
+    <form id="wordForm">
+        <div class="mb-3">
+            <label for="word1" class="form-label">Mot 1:</label>
+            <input type="text" id="word1" name="word1" class="form-control" placeholder="Entrez le mot 1">
+            <button type="button" class="btn btn-primary mt-2" onclick="checkWord('word1')">Vérifier Mot 1</button>
+            <div id="error-word1" class="error-message text-danger mt-2" style="display: none;">Mot incorrect, veuillez réessayer.</div>
+            <div id="success-word1" class="success-message text-success mt-2" style="display: none;">Mot correct!</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="word2" class="form-label">Mot 2:</label>
+            <input type="text" id="word2" name="word2" class="form-control" placeholder="Entrez le mot 2">
+            <button type="button" class="btn btn-primary mt-2" onclick="checkWord('word2')">Vérifier Mot 2</button>
+            <div id="error-word2" class="error-message text-danger mt-2" style="display: none;">Mot incorrect, veuillez réessayer.</div>
+            <div id="success-word2" class="success-message text-success mt-2" style="display: none;">Mot correct!</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="word3" class="form-label">Mot 3:</label>
+            <input type="text" id="word3" name="word3" class="form-control" placeholder="Entrez le mot 3">
+            <button type="button" class="btn btn-primary mt-2" onclick="checkWord('word3')">Vérifier Mot 3</button>
+            <div id="error-word3" class="error-message text-danger mt-2" style="display: none;">Mot incorrect, veuillez réessayer.</div>
+            <div id="success-word3" class="success-message text-success mt-2" style="display: none;">Mot correct!</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="word4" class="form-label">Mot 4:</label>
+            <input type="text" id="word4" name="word4" class="form-control" placeholder="Entrez le mot 4">
+            <button type="button" class="btn btn-primary mt-2" onclick="checkWord('word4')">Vérifier Mot 4</button>
+            <div id="error-word4" class="error-message text-danger mt-2" style="display: none;">Mot incorrect, veuillez réessayer.</div>
+            <div id="success-word4" class="success-message text-success mt-2" style="display: none;">Mot correct!</div>
+        </div>
+    </form>
+
+    <!-- Message de félicitations -->
+    <div id="message" class="alert alert-success mt-4 text-center" style="display: none;">
+        Félicitations ! Vous avez trouvé tous les mots !
+    </div>
+</div>
+
+<!-- Script JavaScript pour vérifier les mots -->
+<script>
+    // Object pour suivre les mots corrects trouvés
+    const foundWords = {
+        word1: false,
+        word2: false,
+        word3: false,
+        word4: false
+    };
+
+    async function checkWord(inputId) {
+        const userInput = document.getElementById(inputId).value.trim();
+        const errorElement = document.getElementById('error-' + inputId);
+        const successElement = document.getElementById('success-' + inputId);
+
+        try {
+            const response = await fetch('/check-word', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ inputId, userInput })
+            });
+
+            const text = await response.text();
+            console.log('Raw response:', text);  // Affiche la réponse brute pour débogage
+
+            const data = JSON.parse(text);  // Parse la réponse JSON
+
+            if (data.valid) {
+                foundWords[inputId] = true;
+                errorElement.style.display = 'none';
+                successElement.style.display = 'block';
+            } else {
+                foundWords[inputId] = false;
+                errorElement.style.display = 'block';
+                successElement.style.display = 'none';
+            }
+
+            const allCorrect = Object.values(foundWords).every(val => val);
+
+            const messageElement = document.getElementById('message');
+
+            if (allCorrect) {
+                messageElement.style.display = 'block';
+            } else {
+                messageElement.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Erreur lors de la vérification du mot:', error);
+        }
+    }
+</script>
+
 {% endblock %}
