@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+			    <li class="nav-item">
+                    <a class="nav-link {% if app.request.get('_route') == 'start_game' %}active{% endif %}" href="{{ path('start_game') }}">HangmanGame</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if app.request.get('_route') == 'app_gold' %}active{% endif %}" href="{{ path('app_gold') }}">Au 79</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if app.request.get('_route') == 'start_game' %}active{% endif %}" href="{{ path('start_game') }}">Mystery Quest</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if app.request.get('_route') == 'start_game' %}active{% endif %}" href="{{ path('start_game') }}">Imagimot</a>
+                </li>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
