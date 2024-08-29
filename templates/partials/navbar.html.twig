@@ -14,10 +14,13 @@
                 <li class="nav-item">
                     <a class="nav-link {% if app.request.get('_route') == 'start_game' %}active{% endif %}" href="{{ path('start_game') }}">Mystery Quest</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link {% if app.request.get('_route') == 'start_game' %}active{% endif %}" href="{{ path('start_game') }}">Imagimot</a>
                 </li>
+            </ul>
+
+            <!-- Alignement des éléments de droite -->
+            <ul class="navbar-nav ms-auto">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Logout</a></li>
                 {% else %}

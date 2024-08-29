@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Guirlande;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +13,8 @@ class RpsController extends AbstractController
     #[Route('/677569726c616e6465', name: 'app_rps')]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $choices = ['Pierre', 'Papier', 'Ciseaux'];
         $userChoice = $request->query->get('choice');

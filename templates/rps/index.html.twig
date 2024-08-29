@@ -1,30 +1,52 @@
-{# templates/rps/index.html.twig #}
+{# templates/main/index.html.twig #}
 
-<h1>Pierre-Papier-Ciseaux</h1>
+{% extends 'base.html.twig' %}
 
-{% if userChoice %}
-    <p>Vous avez choisi : <strong>{{ userChoice }}</strong></p>
-    <p>L'ordinateur a choisi : <strong>{{ computerChoice }}</strong></p>
-    <p><strong>{{ result }}</strong></p>
+{% block title %}Accueil{% endblock %}
 
-    {% if result == 'Vous avez gagné !' %}
-        <h2>Bravo tu a gangné ! Le mot que tu cherche est dans cette liste 😁 :</h2>
-        <ul>
-            {% for guirlande in guirlandes %}
-                <li>{{ guirlande.name }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+{% block body %}
+    {# Logique d'affichage du jeu Pierre-Papier-Ciseaux #}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Pierre-Papier-Ciseaux</h1>
 
-    <a href="{{ path('app_rps') }}">Rejouer</a>
-{% else %}
-    <form method="get" action="{{ path('app_rps') }}">
-        <label for="choice">Faites votre choix :</label>
-        <select name="choice" id="choice">
-            {% for choice in choices %}
-                <option value="{{ choice }}">{{ choice }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Jouer</button>
-    </form>
-{% endif %}
+        {% if userChoice %}
+            <div class="text-center">
+                <p>Vous avez choisi : <strong>{{ userChoice }}</strong></p>
+                <p>L'ordinateur a choisi : <strong>{{ computerChoice }}</strong></p>
+                <p><strong>{{ result }}</strong></p>
+            </div>
+
+            {% if result == 'Vous avez gagné !' %}
+                <div class="alert alert-success mt-4">
+                    <h2>Bravo tu as gagné ! Le mot que tu cherches est dans cette liste 😁 :</h2>
+                    <ul class="list-group">
+                        {% for guirlande in guirlandes %}
+                            <li class="list-group-item">{{ guirlande.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="text-center mt-4">
+                <a href="{{ path('app_rps') }}" class="btn btn-primary">Rejouer</a>
+            </div>
+        {% else %}
+            <div class="d-flex justify-content-center">
+                <form method="get" action="{{ path('app_rps') }}" class="w-50">
+                    <div class="form-group">
+                        <label for="choice">Faites votre choix :</label>
+                        <select name="choice" id="choice" class="form-control">
+                            {% for choice in choices %}
+                                <option value="{{ choice }}">{{ choice }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-success">Jouer</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

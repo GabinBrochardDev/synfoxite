@@ -59,4 +59,65 @@
         </div>
     </div>
 </div>
+<script>
+      let startTime;
+      let timerInterval;
+      function startTimer() {
+          startTime = new Date().getTime();
+          timerInterval = setInterval(function() {
+              let now = new Date().getTime();
+              let elapsedTime = Math.floor((now - startTime) / 1000);
+              document.getElementById('timer').innerText = 'Temps écoulé : ' + elapsedTime + ' secondes';
+          }, 1000);
+      }
+      document.getElementById('guess-form').addEventListener('submit', function(e) {
+          e.preventDefault();
+          if (!startTime) {
+              startTimer();
+          }
+          let form = e.target;
+          let formData = new FormData(form);
+          formData.append('elapsedTime', Math.floor((new Date().getTime() - startTime) / 1000));
+          let xhr = new XMLHttpRequest();
+          xhr.open('POST', form.action, true);
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          xhr.onload = function() {
+              if (xhr.status === 200) {
+                  let response = JSON.parse(xhr.responseText);
+                  document.getElementById('response-message').innerText = response.message;
+                  if (!response.isOver) {
+                      let guessField = form.querySelector('input[name="{{ form.guess.vars.full_name }}"]');
+                      if (guessField) {
+                          guessField.value = '';
+                      } else {
+                          console.error("Champ 'guess' non trouvé. Vérifiez le nom du champ dans le formulaire.");
+                      }
+                  }
+                  if (response.isOver) {
+                      clearInterval(timerInterval);
+                      document.getElementById('form-container').style.display = 'none';
+                  }
+              }
+          };
+          xhr.send(formData);
+      });
+      document.getElementById('reset-button').addEventListener('click', function() {
+          let xhr = new XMLHttpRequest();
+          xhr.open('POST', '{{ path("app_gold_reset") }}', true);
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          xhr.onload = function() {
+              if (xhr.status === 200) {
+                  clearInterval(timerInterval);
+                  startTime = null;
+                  document.getElementById('timer').innerText = 'Temps écoulé : 0 secondes';
+                  document.getElementById('response-message').innerText = 'Jeu réinitialisé. Vous pouvez recommencer.';
+                  document.getElementById('form-container').style.display = '';
+              }
+          };
+          xhr.send();
+      });
+      window.onload = function() {
+          document.getElementById('response-message').innerText = '';
+      };
+</script>
 {% endblock %}
