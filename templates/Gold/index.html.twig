@@ -1,45 +1,132 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Jeu 2 - Trouvez le chiffre mystère{% endblock %}
-
 {% block body %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header text-center">
-                    <h2>Trouvez le chiffre mystère</h2>
+    <div style="display: flex;">
+        <div style="flex: 1;">
+            <h1>Devinez le chiffre entre 1 et 79</h1>
+
+            {% if isOver %}
+                <p>Le jeu est terminé. Cliquez <a href="{{ path('app_gold') }}">ici</a> pour rejouer.</p>
+            {% else %}
+                <p id="timer">Temps écoulé : 0 secondes</p>
+                <div id="form-container">
+                    {{ form_start(form, {'attr': {'id': 'guess-form'}}) }}
+                        {{ form_row(form.guess) }}
+                        <button type="submit" class="btn">Deviner</button>
+                    {{ form_end(form) }}
                 </div>
-                <div class="card-body">
-                    {% if isOver %}
-                        {% if app.flashes('success') %}
-                            <div class="alert alert-success text-center">
-                                {{ app.flashes('success')[0] }}
-                            </div>
-                        {% elseif app.flashes('danger') %}
-                            <div class="alert alert-danger text-center">
-                                {{ app.flashes('danger')[0] }}
-                            </div>
-                        {% endif %}
-                        <a href="{{ path('app_Gold') }}" class="btn btn-success btn-block mt-3">Rejouer</a>
-                    {% else %}
-                        {% if app.flashes('warning') %}
-                            <div class="alert alert-warning text-center">
-                                {{ app.flashes('warning')[0] }}
-                            </div>
-                        {% endif %}
-                        <form method="post">
-                            <div class="form-group">
-                                <label for="guess">Votre essai :</label>
-                                <input type="number" name="guess" id="guess" class="form-control" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block mt-4">Valider</button>
-                        </form>
-                        <p class="text-center mt-3">Nombre de tentatives : {{ attempts }}</p>
-                    {% endif %}
-                </div>
+                <button id="reset-button" class="btn">Réinitialiser le jeu</button>
+                <p id="response-message"></p>
+            {% endif %}
+
+            <div id="flash-messages">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
             </div>
         </div>
+        <div style="flex: 1; margin-left: 20px;">
+            <h2>Vos 3 meilleurs temps du 79</h2>
+            <ul id="user-best-times">
+                {% for Gold in userBestTimes %}
+                    <li>{{ Gold.duration }} secondes (le {{ Gold.endTime|date('d/m/Y H:i:s', 'Europe/Paris') }})</li>
+                {% else %}
+                    <li>Aucun temps enregistré</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Meilleurs temps globaux du 79</h2>
+            <ul id="global-best-times">
+                {% set displayedUsers = [] %}
+                {% for Gold in globalBestTimes %}
+                    {% if Gold.user.email not in displayedUsers %}
+                        <li>{{ Gold.user.email }} : {{ Gold.duration }} secondes (le {{ Gold.endTime|date('d/m/Y H:i:s', 'Europe/Paris') }})</li>
+                        {% set displayedUsers = displayedUsers|merge([Gold.user.email]) %}
+                    {% endif %}
+                {% else %}
+                    <li>Aucun temps enregistré</li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-</div>
+
+    <script>
+      let startTime;
+      let timerInterval;
+
+      function startTimer() {
+          startTime = new Date().getTime();
+          timerInterval = setInterval(function() {
+              let now = new Date().getTime();
+              let elapsedTime = Math.floor((now - startTime) / 1000);
+              document.getElementById('timer').innerText = 'Temps écoulé : ' + elapsedTime + ' secondes';
+          }, 1000);
+      }
+
+      document.getElementById('guess-form').addEventListener('submit', function(e) {
+          e.preventDefault();
+
+          if (!startTime) {
+              startTimer();
+          }
+
+          let form = e.target;
+          let formData = new FormData(form);
+          formData.append('elapsedTime', Math.floor((new Date().getTime() - startTime) / 1000));
+          let xhr = new XMLHttpRequest();
+          xhr.open('POST', form.action, true);
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+          xhr.onload = function() {
+              if (xhr.status === 200) {
+                  let response = JSON.parse(xhr.responseText);
+                  document.getElementById('response-message').innerText = response.message;
+
+                  if (!response.isOver) {
+                      let guessField = form.querySelector('input[name="{{ form.guess.vars.full_name }}"]');
+                      if (guessField) {
+                          guessField.value = '';
+                      } else {
+                          console.error("Champ 'guess' non trouvé. Vérifiez le nom du champ dans le formulaire.");
+                      }
+                  }
+
+                  if (response.isOver) {
+                      clearInterval(timerInterval);
+                      document.getElementById('form-container').style.display = 'none';
+                  }
+              }
+          };
+
+          xhr.send(formData);
+      });
+
+      document.getElementById('reset-button').addEventListener('click', function() {
+          let xhr = new XMLHttpRequest();
+          xhr.open('POST', '{{ path("app_gold_reset") }}', true);
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+          xhr.onload = function() {
+              if (xhr.status === 200) {
+                  clearInterval(timerInterval);
+                  startTime = null;
+                  document.getElementById('timer').innerText = 'Temps écoulé : 0 secondes';
+                  document.getElementById('response-message').innerText = 'Jeu réinitialisé. Vous pouvez recommencer.';
+                  document.getElementById('form-container').style.display = '';
+              }
+          };
+
+          xhr.send();
+      });
+
+      window.onload = function() {
+          document.getElementById('response-message').innerText = '';
+      };
+
+    </script>
 {% endblock %}

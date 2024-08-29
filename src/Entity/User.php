@@ -2,6 +2,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,7 +17,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 50, unique: true)]
@@ -32,6 +34,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Gold::class)]
+    private Collection $golds;
+
+    public function __construct()
+    {
+        $this->golds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -118,5 +128,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Gold>
+     */
+    public function getGolds(): Collection
+    {
+        return $this->golds;
+    }
+
+    public function addGold(Gold $gold): static
+    {
+        if (!$this->golds->contains($gold)) {
+            $this->golds[] = $gold;
+            $gold->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGold(Gold $gold): static
+    {
+        if ($this->golds->removeElement($gold)) {
+            // set the owning side to null (unless already changed)
+            if ($gold->getUser() === $this) {
+                $gold->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
