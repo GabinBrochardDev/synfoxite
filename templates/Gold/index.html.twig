@@ -1,29 +1,45 @@
-{# templates/Gold/index.html.twig #}
-
 {% extends 'base.html.twig' %}
 
-
+{% block title %}Jeu 2 - Trouvez le chiffre mystère{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Devinez le chiffre</h1>
-
-        {% if isOver %}
-            <p>Le jeu est terminé. Cliquez <a href="{{ path('app_Gold') }}">ici</a> pour rejouer.</p>
-        {% else %}
-            <p>Nombre de tentatives restantes : {{ 10 - attempts }}</p>
-            {{ form_start(form) }}
-                {{ form_row(form.guess) }}
-                <button class="btn">Deviner</button>
-            {{ form_end(form) }}
-        {% endif %}
-
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label }}">
-                    {{ message }}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header text-center">
+                    <h2>Trouvez le chiffre mystère</h2>
                 </div>
-            {% endfor %}
-        {% endfor %}
+                <div class="card-body">
+                    {% if isOver %}
+                        {% if app.flashes('success') %}
+                            <div class="alert alert-success text-center">
+                                {{ app.flashes('success')[0] }}
+                            </div>
+                        {% elseif app.flashes('danger') %}
+                            <div class="alert alert-danger text-center">
+                                {{ app.flashes('danger')[0] }}
+                            </div>
+                        {% endif %}
+                        <a href="{{ path('app_Gold') }}" class="btn btn-success btn-block mt-3">Rejouer</a>
+                    {% else %}
+                        {% if app.flashes('warning') %}
+                            <div class="alert alert-warning text-center">
+                                {{ app.flashes('warning')[0] }}
+                            </div>
+                        {% endif %}
+                        <form method="post">
+                            <div class="form-group">
+                                <label for="guess">Votre essai :</label>
+                                <input type="number" name="guess" id="guess" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mt-4">Valider</button>
+                        </form>
+                        <p class="text-center mt-3">Nombre de tentatives : {{ attempts }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}

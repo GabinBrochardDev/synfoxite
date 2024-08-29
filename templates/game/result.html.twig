@@ -1,44 +1,36 @@
-{# templates/game/result.html.twig #}
+{% extends 'base.html.twig' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Résultat de la tentative</title>
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>Résultat de la tentative</h1>
+{% block title %}Résultat du jeu{% endblock %}
 
-        {% if result.success %}
-            <p class="success">{{ result.message }}</p>
-            <a href="{{ path('start_game') }}"><button>Rejouer</button></a>
-        {% else %}
-            <p class="error">{{ result.message }}</p>
+{% block body %}
+<div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card w-100" style="max-width: 600px;">
+        <div class="card-header text-center">
+            <h2>Résultat de la tentative</h2>
+        </div>
+        <div class="card-body">
+            <p class="text-center {{ result.success ? 'text-success' : 'text-danger' }}">{{ result.message }}</p>
+            <p class="text-center">Il vous reste {{ result.remainingAttempts }} tentatives.</p>
 
-            {% if result.remainingAttempts > 0 %}
-                <div class="form-container">
-                    <form action="{{ path('play_game') }}" method="post">
+            <h3 class="text-center">Indices :</h3>
+            <ul class="list-group list-group-flush overflow-auto" style="max-height: 50vh;">
+                {% for hint in result.hints %}
+                    <li class="list-group-item">{{ hint }}</li>
+                {% endfor %}
+            </ul>
+
+            {% if not result.success and result.remainingAttempts > 0 %}
+                <form action="{{ path('play_game') }}" method="POST" class="mt-4">
+                    <div class="form-group">
                         <label for="answer">Votre réponse :</label>
-                        <input type="text" id="answer" name="answer" required>
-                        <button type="submit">Valider</button>
-                    </form>
-                    <p>Il vous reste {{ result.remainingAttempts }} tentatives.</p>
-                </div>
+                        <input type="text" name="answer" id="answer" class="form-control" placeholder="Entrez votre réponse ici" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mt-3">Valider</button>
+                </form>
             {% else %}
-                <a href="{{ path('start_game') }}"><button>Rejouer</button></a>
+                <a href="{{ path('start_game') }}" class="btn btn-success btn-block mt-3">Rejouer</a>
             {% endif %}
-            
-            <div class="hints-container">
-                <h2>Indices :</h2>
-                <ul>
-                    {% for hint in result.hints %}
-                        <li>{{ hint }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
+        </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

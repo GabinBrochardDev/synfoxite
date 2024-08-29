@@ -1,16 +1,33 @@
-/* Corps de la page */
-body {
+/* Global */
+html, body {
+    height: 100%;
+    margin: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
+}
+
+/* Flexbox configuration for full-page layout */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header, main, and footer layout */
+header, footer {
+    background-color: #343a40;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+}
+
+main {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    overflow-y: hidden;  /* Empêche le défilement global */
+    padding: 20px;
 }
 
-/* Conteneur principal */
+/* Container for the main content */
 .container {
     background-color: #ffffff;
     padding: 30px;
@@ -19,134 +36,29 @@ body {
     max-width: 600px;
     width: 100%;
     text-align: center;
-    overflow-y: auto;  /* Ajoute du défilement interne si nécessaire */
-    max-height: 90vh;  /* Empêche le conteneur de dépasser l'écran */
 }
 
-/* Ajuster la taille du texte et des éléments */
-h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+/* Footer adjustment */
+footer {
     width: 100%;
+    position: relative;
+    bottom: 0;
 }
 
-li {
-    background-color: #f1f3f5;
-    padding: 10px;  /* Réduire le padding pour économiser de l'espace */
-    border-radius: 8px;
-    font-size: 14px;  /* Réduire légèrement la taille de la police */
-    color: #495057;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-/* Formulaire */
-.form-container {
-    margin-top: 20px;
-}
-
-form {
+/* Optional: Ensure footer sticks to bottom if content is short */
+html, body {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
-label {
-    margin-bottom: 10px;
-    font-weight: bold;
-    color: #495057;
+body > main {
+    flex: 1;
 }
 
-input[type="text"] {
-    padding: 12px;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 16px;
+footer {
+    position: relative;
+    bottom: 0;
     width: 100%;
-    max-width: 300px;
-}
-
-button {
-    padding: 12px 20px;
-    background-color: #007BFF;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-/* Messages de résultat */
-p {
-    margin-top: 20px;
-    color: #495057;
-    font-size: 18px;
-}
-
-p.success {
-    color: #28a745;
-    font-weight: bold;
-}
-
-p.error {
-    color: #dc3545;
-    font-weight: bold;
-}
-
-/* Boutons de rejouer */
-a button {
-    margin-top: 20px;
-    background-color: #28a745;
-    border: none;
-    color: #ffffff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-a button:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .container {
-        padding: 20px;
-    }
-
-    h1 {
-        font-size: 24px;
-    }
-
-    h2 {
-        font-size: 20px;
-    }
-
-    li {
-        font-size: 14px;
-    }
+    text-align: center;
 }

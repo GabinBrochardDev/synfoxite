@@ -1,28 +1,28 @@
-{# templates/base.html.twig #}
-
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Devinez le mot mystère{% endblock %}</title>
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <title>{% block title %}Synfoxite{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     {% block stylesheets %}{% endblock %}
 </head>
-<body class="d-flex flex-column">
-    {# Header #}
+<body class="d-flex flex-column min-vh-100">
+
     {% include "partials/header.html.twig" %}
 
     <main class="flex-grow-1">
-        <div class="container">
-            <div id="notif">{% include "partials/notif.html.twig" %}</div>
+        <div id="main-content" class="container">
             {% block body %}{% endblock %}
         </div>
     </main>
 
-    {# Footer #}
     {% include "partials/footer.html.twig" %}
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     {% block javascripts %}{% endblock %}
 </body>
 </html>

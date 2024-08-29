@@ -36,7 +36,6 @@ class GameController extends AbstractController
 
         return $this->render('game/result.html.twig', [
             'result' => $result,
-            'hints' => $gameService->startNewGame()['hints'],
         ]);
     }
 }
