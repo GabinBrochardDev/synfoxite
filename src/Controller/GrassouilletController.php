@@ -3,19 +3,23 @@
 namespace App\Controller;
 
 use App\Form\ImagimotType;
-use App\ImagimotService\ImagimotService;
 use App\Repository\GrassouilletRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class GrassouilletController extends AbstractController
 {
     #[Route('/imagimot', name: 'app_imagimot')]
     public function index(SessionInterface $session, GrassouilletRepository $grassouilletRepository): Response
     {
+        // Redirection vers la page de login si l'utilisateur n'est pas connecté
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         // Set the session with attributes
         if ($session->get('arrayImagimot') === null && empty($session->get('arrayImagimot'))) {
             $arrayImagimot = $grassouilletRepository->findAll();
@@ -25,8 +29,6 @@ class GrassouilletController extends AbstractController
         if ($session->get('attemptsImagimot') === null && empty($session->get('attemptsImagimot'))) {
             $session->set('attemptsImagimot', 1);
         }
-
-        // dd($session, $session->get('arrayImagimot')[$session->get('attemptsImagimot')], count($session->get('arrayImagimot')), $session->get('attemptsImagimot') + 1);
 
         return $this->render('grassouillet/index.html.twig', [
             'title' => 'Imagimot',
@@ -39,6 +41,11 @@ class GrassouilletController extends AbstractController
     #[Route('/imagimot/game', name: 'app_imagimot_game')]
     public function form(Request $request, SessionInterface $session, GrassouilletRepository $grassouilletRepository): Response
     {
+        // Redirection vers la page de login si l'utilisateur n'est pas connecté
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirectToRoute('app_login');
+        }
+
         // Set the session with attributes
         if ($session->get('arrayImagimot') === null && empty($session->get('arrayImagimot'))) {
             $arrayImagimot = $grassouilletRepository->findAll();
@@ -74,7 +81,7 @@ class GrassouilletController extends AbstractController
         return $this->render('grassouillet/form.html.twig', [
             'title' => 'Imagimot - Form',
             'animal' => $session->get('arrayImagimot')[$session->get('attemptsImagimot') - 1],
-            'imagimotForm' => $form,
+            'imagimotForm' => $form->createView(), // Ajout de createView() pour passer correctement le formulaire à Twig
         ]);
     }
 }
