@@ -1,6 +1,4 @@
 <?php
-// src/Service/GameService.php
-
 namespace App\Service;
 
 class GameService
@@ -12,46 +10,35 @@ class GameService
         "Je peux être joué à quatre personnes.",
         "Je suis aussi le nom d'une capitale.",
         "Mon nom peut également désigner une pièce d'équipement utilisée dans l'escalade.",
+        "Je suis souvent associé à un jeu de cartes populaire.",
         "Mon nom évoque aussi un type de lien ou de connexion.",
         "Je suis parfois utilisé pour désigner un objet qui sert à sécuriser.",
         "Dans le monde nautique, je peux désigner une pièce d'équipement.",
+        "On m'associe à un lieu où l'on peut jouer, souvent mentionné avec le mot 'porte'."
     ];
-
-    private int $maxAttempts = 10;
 
     public function startNewGame(): array
     {
-        // Initialisation des données de jeu
         return [
+            'word' => $this->word,
             'hints' => array_slice($this->hints, 0, 5),
-            'remainingAttempts' => $this->maxAttempts,
+            'remainingAttempts' => 10,
         ];
     }
 
     public function checkAnswer(string $answer, int $attemptsMade): array
     {
-        if (strtolower($answer) === $this->word) {
-            return ['success' => true, 'message' => 'Félicitations, vous avez deviné le mot !'];
-        }
+        $success = strtolower($answer) === strtolower($this->word);
+        $remainingAttempts = 10 - $attemptsMade;
 
-        $remainingAttempts = $this->maxAttempts - $attemptsMade;
-        $hintsToShow = $attemptsMade >= 5 ? array_slice($this->hints, 0, 10) : array_slice($this->hints, 0, 5);
-
-        if ($remainingAttempts > 0) {
-            return [
-                'success' => false,
-                'message' => "Incorrect. Il vous reste $remainingAttempts tentatives.",
-                'remainingAttempts' => $remainingAttempts,
-                'hints' => $hintsToShow
-            ];
-        }
+        // Montre les 5 premiers indices pour les 5 premières tentatives, puis tous les indices
+        $hintsToShow = $attemptsMade < 5 ? array_slice($this->hints, 0, 5) : $this->hints;
 
         return [
-            'success' => false,
-            'message' => "Dommage, tu as perdu. Le mot était '{$this->word}'.",
-            'remainingAttempts' => 0,
-            'hints' => $hintsToShow
+            'success' => $success,
+            'message' => $success ? "Félicitations, vous avez deviné le mot !" : "Incorrect. Il vous reste $remainingAttempts tentatives.",
+            'remainingAttempts' => $remainingAttempts,
+            'hints' => $hintsToShow,
         ];
     }
 }
-
