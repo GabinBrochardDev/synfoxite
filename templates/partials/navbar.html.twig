@@ -1,11 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav">
-			    <li class="nav-item">
+        <div class="navbar-collapse collapse justify-content-start">
+            <ul class="navbar-nav me-auto" style="margin-left: 350px;"> <!-- Ajustez cette valeur pour centrer les jeux -->
+                <li class="nav-item">
                     <a class="nav-link {% if app.request.get('_route') == 'app_rps' %}active{% endif %}" href="{{ path('app_rps') }}">Chifoumi</a>
                 </li>
                 <li class="nav-item">
@@ -18,9 +15,9 @@
                     <a class="nav-link {% if app.request.get('_route') == 'start_game' %}active{% endif %}" href="{{ path('start_game') }}">Imagimot</a>
                 </li>
             </ul>
-
-            <!-- Alignement des éléments de droite -->
-            <ul class="navbar-nav ms-auto">
+        </div>
+        <div class="ms-auto" style="margin-right: -400px;"> <!-- Ajustez cette valeur pour aligner à droite -->
+            <ul class="navbar-nav">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Logout</a></li>
                 {% else %}
