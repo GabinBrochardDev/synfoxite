@@ -22,7 +22,7 @@ class RegistrationFormType extends AbstractType
             ->add('pseudo')
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'first_options' => ['label' => 'Mot de passe'],
+                'first_options' => ['label' => 'Mot de passe *6 caractères minimum'],
                 'second_options' => ['label' => 'Répétez le mot de passe'],
                 'invalid_message' => 'Les mots de passe doivent correspondre.',
                 'mapped' => false, // Ne pas lier à l'entité
