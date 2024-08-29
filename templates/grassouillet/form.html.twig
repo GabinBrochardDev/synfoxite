@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>{{ title }}</h1>
+    <h2>Trouver le nom de l'animal</h2>
+    <img src="{{ asset('imagimot/' ~ animal.image) }}" class="img-fluid" style="height:300px; margin:50px;" alt="{{ animal.image }}"/>
+    {{ form_start(imagimotForm)}}
+        {{ form_row(imagimotForm.animal)}}
+    {{ form_end(imagimotForm)}}
+  
+</div>
+{% endblock %}
