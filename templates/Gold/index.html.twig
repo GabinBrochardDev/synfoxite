@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Jeu 2 - Trouvez le chiffre mystère{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="text-primary text-dark">Devinez le chiffre entre 1 et 79</h1>
+
+            {% if isOver %}
+                <div class="alert alert-info">Le jeu est terminé. Cliquez <a href="{{ path('app_gold') }}" class="alert-link">ici</a> pour rejouer.</div>
+            {% else %}
+                <p id="timer" class="text-secondary text-dark">Temps écoulé : 0 secondes</p>
+                <div id="form-container">
+                    {{ form_start(form, {'attr': {'id': 'guess-form'}}) }}
+                        <div class="form-group">
+                            {{ form_row(form.guess, {'attr': {'class': 'form-control text-dark'}}) }}
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">Deviner</button>
+                    {{ form_end(form) }}
+                </div>
+                <button id="reset-button" class="btn btn-danger btn-block mt-3">Réinitialiser le jeu</button>
+                <p id="response-message" class="mt-3 text-info text-dark"></p>
+            {% endif %}
+
+            <div id="flash-messages" class="mt-4">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }} mt-2">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-primary text-dark">Vos 3 meilleurs temps du 79</h2>
+            <ul id="user-best-times" class="list-group">
+                {% for Gold in userBestTimes %}
+                    <li class="list-group-item text-dark">{{ Gold.duration }} secondes (le {{ Gold.endTime|date('d/m/Y H:i:s', 'Europe/Paris') }})</li>
+                {% else %}
+                    <li class="list-group-item text-dark">Aucun temps enregistré</li>
+                {% endfor %}
+            </ul>
+
+            <h2 class="text-primary text-dark mt-4">Meilleurs temps globaux du 79</h2>
+            <ul id="global-best-times" class="list-group">
+                {% set displayedUsers = [] %}
+                {% for Gold in globalBestTimes %}
+                    {% if Gold.user.email not in displayedUsers %}
+                        <li class="list-group-item text-dark">{{ Gold.user.email }} : {{ Gold.duration }} secondes (le {{ Gold.endTime|date('d/m/Y H:i:s', 'Europe/Paris') }})</li>
+                        {% set displayedUsers = displayedUsers|merge([Gold.user.email]) %}
+                    {% endif %}
+                {% else %}
+                    <li class="list-group-item text-dark">Aucun temps enregistré</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
