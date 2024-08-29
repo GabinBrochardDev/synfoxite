@@ -1,6 +1,8 @@
 <?php
 
 
+// src/Controller/RegistrationController.php
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -22,20 +24,20 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hash the password
-            $user->setPassword(
-                $passwordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
+            // Hash the plain password
+            $plainPassword = $form->get('plainPassword')->getData();
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $plainPassword
             );
+            $user->setPassword($hashedPassword);
 
-            // Save the user
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Redirect to some route
-            return $this->redirectToRoute('app_login');
+            // Do anything else you need here, like send an email
+
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -43,3 +45,4 @@ class RegistrationController extends AbstractController
         ]);
     }
 }
+
