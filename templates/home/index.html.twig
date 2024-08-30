@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ parent() ~ ' - ' ~ title }}
+    
 {% endblock %}
 
 {% block body %}
 <div class="container mt-5">
     <h1 class="mb-4 text-center">{{ title }}</h1>
-    <!-- Formulaire avec quatre champs de saisie et boutons -->
+    <center><p>Bienvenue sur Symfoxite ! <br>Nos quatre mots sont cachés dans des mini-jeux, bonne chance ! <br>Gabin - Lucas - Ludo - Mathis</p></center>
+    {# <!-- Formulaire avec quatre champs de saisie et boutons -->
     <form id="wordForm">
         <div class="mb-3">
             <label for="word1" class="form-label">Chifoumi:</label>
@@ -40,7 +41,7 @@
             <div id="error-word4" class="error-message text-danger mt-2" style="display: none;">Mot incorrect, veuillez réessayer.</div>
             <div id="success-word4" class="success-message text-success mt-2" style="display: none;">Mot correct!</div>
         </div>
-    </form>
+    </form> #}
 
     <!-- Message de félicitations -->
     <div id="message" class="alert alert-success mt-4 text-center" style="display: none;">
